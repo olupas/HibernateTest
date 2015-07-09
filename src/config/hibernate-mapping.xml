@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="my.model.User" table="T_USER" lazy="false">
+        <cache usage="read-write" region="my.model.User"/>
+        <id name="id" type="java.lang.Integer">
+            <column name="ID"/>
+            <generator class="assigned"/>
+        </id>
+        <property name="firstName" type="string">
+            <column name="FIRST_NAME" length="50" not-null="true"/>
+        </property>
+        <property name="lastName" type="string">
+            <column name="LAST_NAME" length="50" not-null="true"/>
+        </property>
+
+        <set name="profiles" table="T_PROFILE" inverse="true" cascade="all" lazy="true" batch-size="5">
+            <key column="USER_ID" not-null="true"/>
+            <one-to-many class="my.model.Profile"/>
+        </set>
+    </class>
+
+    <class name="my.model.Profile" table="T_PROFILE">
+        <id name="id" type="java.lang.Integer">
+            <column name="ID"/>
+            <generator class="assigned"/>
+        </id>
+
+        <property name="name" type="string">
+            <column name="PROFILE_NAME" length="50" not-null="true"/>
+        </property>
+
+        <many-to-one name="user" class="my.model.User" column="USER_ID"/>
+
+    </class>
+</hibernate-mapping>
